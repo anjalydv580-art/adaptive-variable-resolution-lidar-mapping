@@ -1,0 +1,51 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Project generated data (kept in repo as empty folders via .gitkeep)
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/scenarios/*
+!data/scenarios/.gitkeep
+
+models/*.pkl
+models/*.joblib
+!models/.gitkeep
+
+outputs/figures/*
+!outputs/figures/.gitkeep
+outputs/maps/*
+!outputs/maps/.gitkeep
+outputs/reports/*
+!outputs/reports/.gitkeep
+outputs/benchmarks/*
+!outputs/benchmarks/.gitkeep
+
+# Logs
+*.log

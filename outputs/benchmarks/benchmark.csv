@@ -1,0 +1,5 @@
+scenario,num_frames,seed,total_points_processed,total_objects,total_dynamic,ml_model_source,ml_accuracy_vs_rule,occupied_cell_agreement,elevation_mae,elevation_rmse,elevation_bias,coverage_adaptive,coverage_fixed,num_cells_adaptive,num_cells_fixed,compression_ratio,cell_reduction,processing_time_adaptive,processing_time_fixed,speedup
+default,1,42,8509,14,0,trained,0.0,0.0,0.0,0.0,0.0,0.0013,0.0734,13.0,734.0,0.017711171662125342,0.9822888283378747,0.08518050005659461,0.16104199993424118,1.8905970242865864
+default,2,42,16976,28,10,trained,0.5,0.0,0.0,0.0,0.0,0.0013,0.0772,13.0,772.0,0.01683937823834197,0.9831606217616581,0.09566859994083643,0.15515470004174858,1.6217933589254956
+sparse,1,42,6928,3,0,trained,0.0,0.0,0.0,0.0,0.0,0.0,0.0685,0.0,685.0,0.0,1.0,0.08350379997864366,0.14181900001130998,1.698353847939622
+sparse,2,42,13853,8,1,trained,0.0,0.0,0.0,0.0,0.0,0.0,0.0713,0.0,713.0,0.0,1.0,0.07803460001014173,0.11953599995467812,1.5318333141855367

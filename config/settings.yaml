@@ -1,0 +1,154 @@
+# =============================================================================
+# Adaptive Variable Resolution 2.5D LiDAR Mapping - Configuration
+# =============================================================================
+# All modules read parameters from this file so behaviour can be tuned
+# without touching source code.
+
+project:
+  name: "Adaptive Variable Resolution 2.5D LiDAR Mapping"
+  seed: 42
+
+# ---------------------------------------------------------------------------
+# LiDAR simulator
+# ---------------------------------------------------------------------------
+simulation:
+  num_frames: 20
+  world:
+    x_min: -50.0
+    x_max: 50.0
+    y_min: -50.0
+    y_max: 50.0
+    z_min: -2.0
+    z_max: 15.0
+  sensor:
+    origin: [0.0, 0.0, 1.8]     # LiDAR mounted 1.8 m above ground
+    num_channels: 32            # vertical beams (like a 32-line LiDAR)
+    vertical_fov_deg: [-20.0, 15.0]
+    horizontal_resolution_deg: 0.4
+    max_range: 60.0
+    range_noise_std: 0.02       # meters
+    angular_noise_std_deg: 0.05
+    dropout_prob: 0.01          # probability a beam returns no echo
+  ground:
+    base_height: 0.0
+    roughness_amplitude: 0.05
+    roughness_scale: 8.0
+  obstacles:
+    num_buildings: 5
+    building_size_range: [3.0, 10.0]
+    building_height_range: [3.0, 20.0]
+  vehicles:
+    num_vehicles: 4
+    size: [4.5, 1.9, 1.6]
+    speed_range: [1.0, 6.0]     # m/s
+  pedestrians:
+    num_pedestrians: 6
+    size: [0.5, 0.5, 1.7]
+    speed_range: [0.5, 1.8]     # m/s
+
+# ---------------------------------------------------------------------------
+# Preprocessing / ground detection
+# ---------------------------------------------------------------------------
+preprocessing:
+  voxel_size: 0.25
+  statistical_outlier:
+    k_neighbors: 8
+    std_ratio: 2.0
+
+ground_detection:
+  method: "ransac"
+  ransac:
+    distance_threshold: 0.15
+    max_iterations: 200
+  grid_cell_size: 1.0
+
+# ---------------------------------------------------------------------------
+# Object detection / dynamic detection
+# ---------------------------------------------------------------------------
+object_detection:
+  clustering:
+    method: "dbscan"
+    eps: 0.6
+    min_samples: 6
+  size_filters:
+    min_points: 6
+    max_bbox_volume: 400.0
+
+dynamic_detection:
+  match_distance_threshold: 1.5   # meters, centroid distance to match clusters across frames
+  min_displacement: 0.15          # meters, minimum centroid shift to call an object dynamic
+  frame_dt: 0.1                   # seconds between frames
+
+# ---------------------------------------------------------------------------
+# 2.5D mapping
+# ---------------------------------------------------------------------------
+map:
+  x_min: -50.0
+  x_max: 50.0
+  y_min: -50.0
+  y_max: 50.0
+  fixed_resolution: 0.5           # meters, baseline fixed-resolution cell size
+
+feature_extraction:
+  grid_cell_size: 1.0             # meters, XY cell size for occupancy / gridded stats
+  max_points_temporal: 2000       # deterministic stride-sample cap for temporal_change
+  region_size: 10.0               # meters, Phase 11 adaptive-mapper region tile size
+
+resolution_controller:
+  weights:
+    point_density: 0.25
+    object_density: 0.20
+    dynamic_activity: 0.25
+    elevation_variance: 0.15
+    temporal_change: 0.15
+  normalization:
+    point_density: 5.0
+    object_density: 0.05
+    dynamic_activity: 1.0
+    elevation_variance: 2.0
+    temporal_change: 1.0
+  complexity_thresholds:
+    low_max: 0.33
+    medium_max: 0.66
+  levels:
+    low:
+      cell_size: 2.0
+    medium:
+      cell_size: 1.0
+    high:
+      cell_size: 0.5
+
+# ---------------------------------------------------------------------------
+# ML complexity classifier
+# ---------------------------------------------------------------------------
+ml_classifier:
+  model_type: "random_forest"
+  random_forest:
+    n_estimators: 200
+    max_depth: 12
+    min_samples_leaf: 2
+    random_state: 42
+  train_test_split: 0.25
+  labels: ["low", "medium", "high"]
+  model_path: "models/complexity_classifier.joblib"
+
+# ---------------------------------------------------------------------------
+# Paths
+# ---------------------------------------------------------------------------
+paths:
+  data_raw: "data/raw"
+  data_processed: "data/processed"
+  data_scenarios: "data/scenarios"
+  models: "models"
+  outputs_figures: "outputs/figures"
+  outputs_maps: "outputs/maps"
+  outputs_reports: "outputs/reports"
+  outputs_benchmarks: "outputs/benchmarks"
+
+# ---------------------------------------------------------------------------
+# Dashboard
+# ---------------------------------------------------------------------------
+dashboard:
+  title: "Adaptive Variable Resolution 2.5D LiDAR Mapping"
+  default_num_frames: 10
+  point_cloud_sample_max: 20000
